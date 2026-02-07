@@ -12,36 +12,61 @@ let friends = {
 // GET request: Retrieve all friends
 router.get("/",(req,res)=>{
 
-  // Update the code here
+  return res.status(200).json(friends);
 
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
 });
 
 // GET by specific ID request: Retrieve a single friend with email ID
 router.get("/:email",(req,res)=>{
-  // Update the code here
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+  const email = req.params.email;
+  if(friends[email]){
+    return res.status(200).json(friends[email]);
+  } else {
+    return res.status(404).json({message: "Friend not found"});
+  };
 });
 
 
 // POST request: Add a new friend
 router.post("/",(req,res)=>{
-  // Update the code here
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+  const {email, firstName, lastName, DOB} = req.body;
+  if(email && firstName && lastName && DOB){
+    if(friends[email]){
+      return res.status(400).json({message: "Friend with this email already exists"});
+    } else {
+      friends[email] = {firstName, lastName, DOB};
+      return res.status(201).json({message: "the user " + (firstName)+ " added successfully"});
+    }
+  } else {
+    return res.status(400).json({message: "Missing required fields"});
+  }
 });
 
 
 // PUT request: Update the details of a friend with email id
 router.put("/:email", (req, res) => {
-  // Update the code here
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+  const email = req.params.email;
+  const {firstName, lastName, DOB} = req.body;
+  if(friends[email]){
+    if(firstName) friends[email].firstName = firstName;
+    if(lastName) friends[email].lastName = lastName;
+    if(DOB) friends[email].DOB = DOB;
+    return res.status(200).json({message: "Friend details updated successfully"});
+  } else {
+    return res.status(404).json({message: "Friend not found"});
+  };
 });
 
 
 // DELETE request: Delete a friend by email id
 router.delete("/:email", (req, res) => {
-  // Update the code here
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+  const email = req.params.email;
+  if(friends[email]){
+    delete friends[email];
+    return res.status(200).json({message: "Friend deleted successfully"});
+  } else {
+    return res.status(404).json({message: "Friend not found"});
+  };
 });
 
 module.exports=router;
