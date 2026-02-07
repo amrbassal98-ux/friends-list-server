@@ -1,1 +1,1 @@
-# coding-project-template
+# simple friends list server
